@@ -77,8 +77,8 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="https://pdp.uz/profile/my-courses/AndroidAppDevelopment/android-app-development"
-            android:textSize="16sp"
-            android:textColor="#0071FA"/>
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_post"
@@ -88,6 +88,7 @@
             android:src="@color/teal_700" />
 
         <LinearLayout
+            android:id="@+id/ll_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#EBFBFF"
@@ -101,6 +102,7 @@
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="PDP.UZ"
+                android:textAllCaps="true"
                 android:textSize="14sp" />
 
             <TextView

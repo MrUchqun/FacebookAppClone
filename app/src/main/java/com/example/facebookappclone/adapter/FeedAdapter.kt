@@ -1,23 +1,27 @@
 package com.example.facebookappclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.util.Patterns
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.facebookappclone.R
-import com.example.facebookappclone.activity.CreatePostActivity
+import com.example.facebookappclone.activity.MainActivity
 import com.example.facebookappclone.model.Feed
-import com.example.facebookappclone.model.Story
+import com.example.facebookappclone.model.LinkPost
 import com.google.android.material.imageview.ShapeableImageView
 
-class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
+class FeedAdapter(var context: MainActivity, var items: ArrayList<Feed>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -27,29 +31,20 @@ class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
         private const val TYPE_ITEM_LINK_POST = 3
     }
 
-    private var urlAddress: String? = null
+    @SuppressLint("NotifyDataSetChanged")
+    fun addFeed(feed: Feed) {
+        items.add(2, feed)
+        notifyDataSetChanged()
+    }
 
     override fun getItemViewType(position: Int): Int {
         val feed = items[position]
         return when {
             feed.isHeader -> TYPE_ITEM_HEAD
             feed.stories.size > 0 -> TYPE_ITEM_STORY
-            feed.post!!.isLinkPost -> TYPE_ITEM_LINK_POST
+            feed.linkPost != null -> TYPE_ITEM_LINK_POST
             else -> TYPE_ITEM_POST
         }
-    }
-
-    private fun containsLink(input: String): Boolean {
-        var result = false
-        val parts = input.split("\\s+").toTypedArray()
-        for (item in parts) {
-            if (Patterns.WEB_URL.matcher(item).matches()) {
-                result = true
-                urlAddress = item
-                break
-            }
-        }
-        return result
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -88,7 +83,11 @@ class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
         if (holder is StoryViewHolder) {
             val recyclerView = holder.recyclerView
             val stories = feed.stories
-            refreshAdapter(recyclerView, stories)
+
+            if (holder.adapter == null) {
+                holder.adapter = StoryAdapter(context, stories)
+                recyclerView.adapter = holder.adapter
+            }
         }
 
         if (holder is PostViewHolder) {
@@ -100,21 +99,37 @@ class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
         if (holder is HeadViewHolder) {
             Glide.with(context).load(feed.profile).centerCrop().into(holder.ivProfile)
             holder.tvMind.setOnClickListener {
-                context.startActivity(Intent(context, CreatePostActivity::class.java))
+                val linkPost = LinkPost(feed.profile, feed.fullName)
+                context.callObjectTransfer(linkPost)
             }
         }
 
         if (holder is LinkPostViewHolder) {
-            Glide.with(context).load(feed.post!!.profile).centerCrop().into(holder.ivProfile)
-            holder.tvFullName.text = feed.post!!.fullName
+            val linkPost = feed.linkPost!!
 
+            Glide.with(context).load(linkPost.profile).centerCrop().into(holder.ivProfile)
+            holder.tvFullName.text = linkPost.fullName
+            holder.tvPost.text = findUrl(linkPost.post.toString(), linkPost.link.toString())
+            linkPost.image.let { Glide.with(context).load(it).fitCenter().into(holder.ivPost) }
+
+            if (linkPost.title == null || linkPost.description == null)
+                holder.llAbout.visibility = View.GONE
+
+            holder.tvTitle.text = linkPost.title
+            holder.tvDescription.text = linkPost.description
 
         }
     }
 
-    private fun refreshAdapter(recyclerView: RecyclerView, stories: ArrayList<Story>) {
-        val adapter = StoryAdapter(context, stories)
-        recyclerView.adapter = adapter
+    private fun findUrl(text: String, url: String): Spannable {
+        val spannable = SpannableString(text)
+        spannable.setSpan(
+            ForegroundColorSpan(Color.parseColor("#0071FA")),
+            text.indexOf(url),
+            text.indexOf(url) + url.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        return spannable
     }
 
     override fun getItemCount(): Int {
@@ -129,6 +144,7 @@ class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
 
     class StoryViewHolder(context: Context, view: View) : RecyclerView.ViewHolder(view) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        var adapter: StoryAdapter? = null
 
         init {
             recyclerView.layoutManager =
@@ -142,11 +158,12 @@ class FeedAdapter(var context: Context, var items: ArrayList<Feed>) :
     }
 
     class LinkPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val llAbout: LinearLayout = view.findViewById(R.id.ll_about)
         val ivProfile: ImageView = view.findViewById(R.id.iv_profile)
         val tvFullName: TextView = view.findViewById(R.id.tv_fullName)
         val ivPost: ImageView = view.findViewById(R.id.iv_post)
         val tvPost: TextView = view.findViewById(R.id.tv_post)
-        val tvAddress: TextView = view.findViewById(R.id.tv_address)
-        val tvTitle: TextView = view.findViewById(R.id.tv_title)
+        val tvTitle: TextView = view.findViewById(R.id.tv_address)
+        val tvDescription: TextView = view.findViewById(R.id.tv_title)
     }
 }

@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.198" />
+        <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.1955" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.185" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/ic_baseline_more_horiz_24.xml" value="0.1605" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/ic_baseline_public_24.xml" value="0.1605" />
@@ -18,7 +19,7 @@
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/shape_border_rounded_enabled.xml" value="0.1925" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/shape_border_rounded_stoke.xml" value="0.198" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/drawable/shape_rounded_stoke.xml" value="0.185" />
-        <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/layout/activity_create_post.xml" value="0.27447916666666666" />
+        <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/layout/activity_create_post.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/layout/activity_main.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/layout/item_add_story_view.xml" value="0.27447916666666666" />
         <entry key="..\:/AndroidStudioProjects/FacebookAppClone/app/src/main/res/layout/item_create_post.xml" value="1.8821428571428571" />
